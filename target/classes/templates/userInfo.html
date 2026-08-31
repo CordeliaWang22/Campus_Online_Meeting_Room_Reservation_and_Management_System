@@ -1,0 +1,779 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Self - Online Booking System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet" type="text/css">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css" type="text/css">
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background: #1e3a8a;
+            padding: 20px 40px;
+            display: table;
+            width: 100%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: table-cell;
+            vertical-align: middle;
+            width: 50%;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 15px;
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: bold;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .system-name {
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 20px;
+        }
+
+        .right-section {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            width: 50%;
+            color: white;
+        }
+
+        .main-container {
+            display: table;
+            width: 100%;
+            min-height: calc(100vh - 75px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px 0;
+            display: table-cell;
+            vertical-align: top;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-item {
+            padding: 15px 25px;
+            display: table;
+            width: 100%;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+        }
+
+        .sidebar-item.active {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .sidebar-icon {
+            display: table-cell;
+            vertical-align: middle;
+            width: 24px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .sidebar-text {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: table-cell;
+            padding: 30px;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            padding: 30px;
+            margin-bottom: 30px;
+        }
+
+        .info-title {
+            color: #1e3a8a;
+            font-size: 24px;
+            font-weight: 600;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 2px solid #e6f0ff;
+        }
+
+        .info-form {
+            display: table;
+            width: 100%;
+        }
+
+        .form-group {
+            display: table-row;
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 15px 0;
+            width: 150px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .form-input {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 15px 0;
+            position: relative;
+        }
+
+        .form-input input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e6f0ff;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease;
+        }
+
+        .form-input input:focus {
+            border-color: #1e3a8a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .form-input input:disabled {
+            background-color: transparent;
+            border: none;
+            color: #333;
+            padding: 0;
+        }
+
+        .form-value {
+            padding: 12px 0;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .avatar-section {
+            display: table-row;
+            margin-bottom: 20px;
+        }
+
+        .avatar-container {
+            display: table-cell;
+            vertical-align: middle;
+            padding: 15px 0;
+        }
+
+        .avatar-preview {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            overflow: hidden;
+            border: 3px solid #e6f0ff;
+            position: relative;
+            cursor: default;
+            transition: all 0.3s ease;
+        }
+
+        .avatar-preview.editable {
+            cursor: pointer;
+        }
+
+        .avatar-preview.editable:hover {
+            border-color: #1e3a8a;
+            transform: scale(1.05);
+        }
+
+        .avatar-preview img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .avatar-upload {
+            display: none;
+        }
+
+        .avatar-overlay {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 14px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+        }
+
+        .avatar-preview.editable:hover .avatar-overlay {
+            opacity: 1;
+        }
+
+        .action-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 30px;
+            padding-top: 20px;
+            border-top: 2px solid #e6f0ff;
+        }
+
+        .btn-save, .btn-edit {
+            padding: 12px 30px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-save {
+            background-color: #1e3a8a;
+            color: white;
+            display: none;
+        }
+
+        .btn-save:not(:disabled) {
+            cursor: pointer;
+        }
+
+        .btn-save:disabled {
+            background-color: #9ca3af;
+            cursor: not-allowed;
+        }
+
+        .btn-edit {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+        }
+
+        .btn-edit:disabled {
+            display: none;
+        }
+
+        .btn-edit:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .password-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.5);
+            z-index: 1000;
+        }
+
+        .password-modal-content {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background-color: white;
+            padding: 30px;
+            border-radius: 10px;
+            width: 400px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .password-modal-title {
+            color: #1e3a8a;
+            font-size: 20px;
+            font-weight: 600;
+            margin-bottom: 20px;
+        }
+
+        .password-input-group {
+            margin-bottom: 20px;
+            position: relative;
+        }
+
+        .password-input {
+            width: 100%;
+            padding: 12px 15px;
+            border: 2px solid #e6f0ff;
+            border-radius: 8px;
+            font-size: 16px;
+            color: #333;
+            transition: all 0.3s ease;
+            padding-right: 40px;
+        }
+
+        .toggle-password {
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            cursor: pointer;
+            color: #6b7280;
+            font-size: 18px;
+            width: 24px;
+            height: 24px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: all 0.3s ease;
+        }
+
+        .toggle-password:hover {
+            color: #1e3a8a;
+        }
+
+        .password-modal-buttons {
+            display: flex;
+            justify-content: flex-end;
+            gap: 15px;
+            margin-top: 20px;
+        }
+
+        .btn-cancel, .btn-confirm {
+            padding: 10px 25px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 100px;
+        }
+
+        .btn-cancel {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+        }
+
+        .btn-confirm {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        .btn-cancel:hover, .btn-confirm:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .password-dots {
+            display: inline-block;
+            vertical-align: middle;
+            margin-right: 15px;
+        }
+
+        .password-edit-button {
+            display: inline-block;
+            margin-left: 15px;
+            padding: 8px 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+            vertical-align: middle;
+        }
+
+        .password-edit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        .password-edit-button:hover:not(:disabled) {
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+
+        .password-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .btn-logout {
+            background-color: #fee2e2;
+            color: #dc2626;
+            padding: 12px 30px;
+            border-radius: 8px;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 120px;
+        }
+
+        .btn-logout:hover {
+            background-color: #fecaca;
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="logo-container">
+        <div class="logo">XJTLU</div>
+        <div class="system-name">Online Booking System</div>
+    </div>
+    <div class="right-section">
+        <div class="user-info">
+            <span th:text="'Welcome, ' + ${user.name}">Welcome, User</span>
+        </div>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="sidebar">
+        <div class="sidebar-item" onclick="window.location.href='/welcome'">
+            <div class="sidebar-icon">🏠</div>
+            <div class="sidebar-text">Home</div>
+        </div>
+        <div class="sidebar-item active">
+            <div class="sidebar-icon">👤</div>
+            <div class="sidebar-text">My Info</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <div class="info-card">
+            <div class="info-title">Personal Information</div>
+            <form class="info-form" id="userInfoForm" method="post" enctype="multipart/form-data">
+                <div class="avatar-section">
+                    <div class="form-label">Avatar</div>
+                    <div class="avatar-container">
+                        <div class="avatar-preview" id="avatarPreview">
+                            <img th:src="${user.getAvatarUrl()}" alt="User Avatar">
+                            <div class="avatar-overlay">Click to change avatar</div>
+                        </div>
+                        <input type="file" id="avatar-upload" name="file" class="avatar-upload" accept="image/*" onchange="previewAvatar(event)">
+                        <input type="hidden" name="userId" th:value="${user.id}">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">User ID</div>
+                    <div class="form-input">
+                        <input type="text" th:value="${user.id}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Username</div>
+                    <div class="form-input">
+                        <input type="text" name="name" th:value="${user.name}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Email</div>
+                    <div class="form-input">
+                        <input type="text" name="email" th:value="${user.email}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Phone Number</div>
+                    <div class="form-input">
+                        <input type="text" name="phoneNum" th:value="${user.phoneNum}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Booking Times</div>
+                    <div class="form-input">
+                        <input type="text" th:value="${user.bookingTimes}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Account Status</div>
+                    <div class="form-input">
+                        <input type="text" th:value="${user.status}" disabled>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="form-label">Password</div>
+                    <div class="form-input">
+                        <div class="password-container">
+                            <input type="text" class="password-dots" value="••••••••" disabled>
+                            <button type="button" class="password-edit-button" onclick="showPasswordModal()">Change Password</button>
+                        </div>
+                    </div>
+                </div>
+                <div class="action-buttons">
+                    <button type="button" class="btn-edit" onclick="enableEditing()">Edit</button>
+                    <button type="button" class="btn-logout" onclick="logout()">Log Out</button>
+                    <button type="button" class="btn-save" disabled onclick="saveChanges()">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<!-- Password Change Modal -->
+<div class="password-modal" id="passwordModal">
+    <div class="password-modal-content">
+        <div class="password-modal-title">Change Password</div>
+        <div class="password-input-group">
+            <input type="password" id="oldPassword" class="password-input" placeholder="Enter current password">
+            <span class="toggle-password" onclick="togglePassword('oldPassword')">👁️</span>
+        </div>
+        <div class="password-input-group">
+            <input type="password" id="newPassword" class="password-input" placeholder="Enter new password">
+            <span class="toggle-password" onclick="togglePassword('newPassword')">👁️</span>
+        </div>
+        <div class="password-input-group">
+            <input type="password" id="confirmPassword" class="password-input" placeholder="Confirm new password">
+            <span class="toggle-password" onclick="togglePassword('confirmPassword')">👁️</span>
+        </div>
+        <div class="password-modal-buttons">
+            <button type="button" class="btn-cancel" onclick="closePasswordModal()">Cancel</button>
+            <button type="button" class="btn-confirm" onclick="updatePassword()">Confirm</button>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    function enableEditing() {
+        const inputs = document.querySelectorAll('.form-input input');
+        const saveButton = document.querySelector('.btn-save');
+        const editButton = document.querySelector('.btn-edit');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const changePasswordButton = document.querySelector('.password-edit-button');
+
+        // 禁用密码修改按钮
+        if (changePasswordButton) {
+            changePasswordButton.disabled = true;
+        }
+
+        inputs.forEach(input => {
+            if (input.name === 'name' || input.name === 'email' || input.name === 'phoneNum') {
+                input.disabled = false;
+                input.style.backgroundColor = '#fff';
+                input.style.border = '2px solid #e6f0ff';
+                input.style.padding = '12px 15px';
+            }
+        });
+
+        avatarPreview.classList.add('editable');
+        avatarPreview.onclick = function() {
+            document.getElementById('avatar-upload').click();
+        };
+
+        saveButton.style.display = 'block';
+        saveButton.disabled = false;
+        editButton.style.display = 'none';
+    }
+
+    function resetFormState() {
+        const inputs = document.querySelectorAll('.form-input input');
+        const saveButton = document.querySelector('.btn-save');
+        const editButton = document.querySelector('.btn-edit');
+        const avatarPreview = document.getElementById('avatarPreview');
+        const changePasswordButton = document.querySelector('.password-edit-button');
+
+        inputs.forEach(input => {
+            if (input.name === 'name' || input.name === 'email' || input.name === 'phoneNum') {
+                input.disabled = true;
+                input.style.backgroundColor = 'transparent';
+                input.style.border = 'none';
+                input.style.padding = '0';
+            }
+        });
+
+        avatarPreview.classList.remove('editable');
+        avatarPreview.onclick = null;
+
+        // 重新启用密码修改按钮
+        if (changePasswordButton) {
+            changePasswordButton.disabled = false;
+        }
+
+        saveButton.style.display = 'none';
+        editButton.style.display = 'block';
+    }
+
+    function previewAvatar(event) {
+        const file = event.target.files[0];
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const preview = document.querySelector('.avatar-preview img');
+                preview.src = e.target.result;
+            }
+            reader.readAsDataURL(file);
+        }
+    }
+
+    function saveChanges() {
+        const form = document.getElementById('userInfoForm');
+        const formData = new FormData(form);
+        const email = formData.get('email');
+        const name = formData.get('name');
+        const phoneNum = formData.get('phoneNum');
+        const file = document.getElementById('avatar-upload').files[0];
+        const saveButton = document.querySelector('.btn-save');
+
+        saveButton.disabled = true;
+
+        if (file) {
+            const avatarFormData = new FormData();
+            avatarFormData.append('file', file);
+            avatarFormData.append('userId', formData.get('userId'));
+
+            fetch('/userInfo/upload', {
+                method: 'POST',
+                body: avatarFormData
+            })
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('Failed to upload avatar');
+                    }
+                    return updateUserInfo(email, name, phoneNum);
+                })
+                .then(() => {
+                    resetFormState();
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Fail to save. Please retry');
+                    saveButton.disabled = false;
+                });
+        } else {
+            updateUserInfo(email, name, phoneNum)
+                .then(() => {
+                    resetFormState();
+                    window.location.reload();
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                    alert('Fail to save. Please retry');
+                    saveButton.disabled = false;
+                });
+        }
+    }
+
+    function updateUserInfo(email, name, phoneNum) {
+        return fetch('/welcome/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `email=${encodeURIComponent(email)}&name=${encodeURIComponent(name)}&phoneNum=${encodeURIComponent(phoneNum)}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                    throw new Error(data.error);
+                } else if (data.success) {
+                    alert(data.success);
+                }
+            });
+    }
+
+    function showPasswordModal() {
+        document.getElementById('passwordModal').style.display = 'block';
+    }
+
+    function closePasswordModal() {
+        document.getElementById('passwordModal').style.display = 'none';
+        document.getElementById('oldPassword').value = '';
+        document.getElementById('newPassword').value = '';
+        document.getElementById('confirmPassword').value = '';
+    }
+
+    function togglePassword(inputId) {
+        const input = document.getElementById(inputId);
+        const toggle = input.nextElementSibling;
+        if (input.type === 'password') {
+            input.type = 'text';
+            toggle.innerHTML = '<i class="bi bi-eye-slash"></i>';
+        } else {
+            input.type = 'password';
+            toggle.innerHTML = '<i class="bi bi-eye"></i>';
+        }
+    }
+
+    function updatePassword() {
+        const oldPassword = document.getElementById('oldPassword').value;
+        const newPassword = document.getElementById('newPassword').value;
+        const confirmPassword = document.getElementById('confirmPassword').value;
+
+        if (!oldPassword || !newPassword || !confirmPassword) {
+            alert('Please fill in all blanks');
+            return;
+        }
+
+        if (newPassword !== confirmPassword) {
+            alert('The entered new passwords do not match');
+            return;
+        }
+
+        fetch('/welcome/info', {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/x-www-form-urlencoded',
+            },
+            body: `password=${encodeURIComponent(oldPassword)}&newpword1=${encodeURIComponent(newPassword)}&newpword2=${encodeURIComponent(confirmPassword)}`
+        })
+            .then(response => response.json())
+            .then(data => {
+                if (data.error) {
+                    alert(data.error);
+                } else {
+                    closePasswordModal();
+                    window.location.reload();
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                alert('Fail to update password. Please retry');
+            });
+    }
+
+    function logout() {
+        window.location.href = '/logout';
+    }
+</script>
+</body>
+</html>

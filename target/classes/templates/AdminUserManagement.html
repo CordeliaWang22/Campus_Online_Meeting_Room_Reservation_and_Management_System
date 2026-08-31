@@ -1,0 +1,470 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>User Management</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        #header {
+            background: #1e3a8a;
+            height: 80px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #title {
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 80px;
+            padding-left: 20px;
+            float: left;
+            color: white;
+        }
+
+        #logout {
+            float: right;
+            margin: 20px;
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #logout:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 200px;
+            background-color: white;
+            height: calc(100vh - 80px);
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-button {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #1e3a8a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #content {
+            margin-left: 240px;
+            margin-top: 100px;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 5px 0;
+            font-size: 14px;
+        }
+
+        input[type="submit"],
+        button {
+            padding: 10px 20px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover,
+        button:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #4b5563;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .action-link {
+            color: #1e3a8a;
+            text-decoration: none;
+            margin: 0 5px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .action-link:hover {
+            color: #1e40af;
+        }
+
+        label {
+            color: #4b5563;
+            font-weight: 600;
+            margin-right: 10px;
+        }
+
+        .filter-section {
+            margin-bottom: 15px;
+        }
+
+        /* 新增样式 */
+        .search-form {
+            display: flex;
+            gap: 10px;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .filter-form {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+        }
+
+        .status-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .booking-times-filter {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .clear-button {
+            margin-top: 10px;
+        }
+
+        .clear-button button {
+            background: #dc2626;
+        }
+
+        .clear-button button:hover {
+            background: #b91c1c;
+        }
+    </style>
+
+    <script>
+        function logout() {
+            alert("You have been logged out.");
+        }
+
+        function goTo(page) {
+            window.location.href = page;
+        }
+
+        function searchUser() {
+            var keyword = document.getElementById("keyword").value.trim();
+            if (keyword === "") {
+                alert("Please enter a search keyword.");
+                return false;
+            }
+            window.location.href = "/admin/users/search?keyword=" + encodeURIComponent(keyword);
+            return false;
+        }
+
+        // function filterUsers() {
+        //     var status = document.getElementById("status").value;
+        //     var bookingTimes = document.getElementById("bookingTimes").value;
+        //     window.location.href = "/admin/users/filter?status=" + status + "&bookingTimes=" + bookingTimes;
+        //     return false;
+        // }
+
+        // page loads and get the previous setting
+        window.onload = function() {
+            // if url is /admin/users page, clear the filter data
+            if (window.location.pathname === "/admin/users") {
+                localStorage.removeItem("status");
+                localStorage.removeItem("gBookingTimes");
+                localStorage.removeItem("lBookingTimes");
+            }
+            if (localStorage.getItem("status")) {
+                document.getElementById("status").value = localStorage.getItem("status");
+            }
+            if (localStorage.getItem("gBookingTimes")) {
+                document.getElementById("gBookingTimes").value = localStorage.getItem("gBookingTimes");
+            }
+            if (localStorage.getItem("lBookingTimes")) {
+                document.getElementById("lBookingTimes").value = localStorage.getItem("lBookingTimes");
+            }
+        }
+
+        // update
+        function filterUsers() {
+            var status = document.getElementById("status").value;
+            var gBookingTimes = document.getElementById("gBookingTimes").value;
+            var lBookingTimes = document.getElementById("lBookingTimes").value;
+
+            // check whether if gBookingTimes is larger than lBookingTimes
+            if (parseInt(gBookingTimes) > parseInt(lBookingTimes)) {
+                alert("the minimum booking times can not set larger than the maximum booking times in the filtering");
+                return false;
+            }
+
+            if (status !== localStorage.getItem("status")) {
+                localStorage.setItem("status", status);
+            }
+            if (gBookingTimes !== localStorage.getItem("gBookingTimes")) {
+                localStorage.setItem("gBookingTimes", gBookingTimes);
+            }
+            if (lBookingTimes !== localStorage.getItem("lBookingTimes")) {
+                localStorage.setItem("lBookingTimes", lBookingTimes);
+            }
+
+            window.location.href = "/admin/users/filter?status=" + status + "&gBookingTimes=" + gBookingTimes + "&lBookingTimes=" + lBookingTimes;
+            return false;
+        }
+
+
+        function toggleStatus(id) {
+            var status = document.getElementById("status").value;
+            var gBookingTimes = document.getElementById("gBookingTimes").value;
+            var lBookingTimes = document.getElementById("lBookingTimes").value;
+            var keyword = document.getElementById("keyword") ? document.getElementById("keyword").value : '';
+
+            // use window.location.href to achieve the parameter jumps
+            window.location.href = "/admin/users/toggle/" + id +
+                "?status=" + status +
+                "&gBookingTimes=" + gBookingTimes +
+                "&lBookingTimes=" + lBookingTimes +
+                "&keyword=" + encodeURIComponent(keyword);  // use encodeURIComponent ensure special character safety
+        }
+    </script>
+</head>
+<body>
+<div id="header">
+    <div id="title">User Management</div>
+    <input type="button" id="logout" value="Log out" onclick="logout()">
+
+</div>
+
+<div id="sidebar">
+    <input class="nav-button" type="button" value="Room Management" onclick="goTo('/admin/room')">
+    <input class="nav-button" type="button" value="Booking Management" onclick="goTo('/admin/booking')">
+    <input class="nav-button" type="button" value="User Management" onclick="goTo('/admin/users')">
+</div>
+
+<div id="content">
+    <h2>User Management</h2>
+
+    <!-- User Search Form -->
+    <form onsubmit="return searchUser();">
+        <label>Search by Keyword:</label>
+        <input type="text" id="keyword" placeholder="Username/Email/PhoneNum">
+        <input type="submit" value="Search">
+    </form>
+
+
+    <!-- Filter Form -->
+    <form action="/admin/users/filter" method="get" onsubmit="setDefaultValues(); return filterUsers();">
+        <label>Status:</label>
+        <select name="status" id="status">
+            <option value="All">All</option>
+            <option value="Lock">Lock</option>
+            <option value="Unlock">Unlock</option>
+        </select>
+
+        <label>Booking Times Range:</label>
+        <input type="number" name="gBookingTimes" id="gBookingTimes" placeholder="Min (default 0)" min="0">
+
+        <label>~</label>
+        <input type="number" name="lBookingTimes" id="lBookingTimes" placeholder="Max (default 999)" min="0">
+
+        <input type="submit" value="Filter">
+    </form>
+
+
+    <div>
+        <a href="/admin/users"><button type="button" onclick="clearFilters()">Clear</button></a>
+    </div>
+
+    <!-- reset button -->
+    <div style="margin-top: 20px;">
+        <a href="/admin/users/resetBookingTimes">
+            <button type="button" style="padding: 10px 20px; background-color: #1e3a8a; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                Reset All Booking Times to 0
+            </button>
+        </a>
+    </div>
+
+    <!-- Updated button to reset booking times and unlock all locked users -->
+    <div style="margin-top: 20px;">
+        <a href="/admin/users/resetBookingTimesAndUnlockAll">
+            <button type="button" style="padding: 10px 20px; background-color: #1e3a8a; color: white; border: none; border-radius: 8px; cursor: pointer;">
+                Reset All Booking Times to 0 and Unlock All
+            </button>
+        </a>
+    </div>
+
+    <!-- User Table -->
+    <table>
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>User ID</th>
+            <th>Username</th>
+            <th>Email</th>
+            <th>PhoneNumber</th>
+            <th>Status</th>
+            <th>Booking Times</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="user, iterStat : ${users}">
+            <td th:text="${iterStat.count}">/</td>
+            <td th:text="${user.id}">/</td>
+            <td th:text="${user.name}">/</td>
+            <td th:text="${user.email}">/</td>
+            <td th:text="${user.phoneNum}">/</td>
+            <td th:text="${user.status}">/</td>
+            <td th:text="${user.bookingTimes}">/</td>
+            <td>
+                <a th:href="@{/admin/users/toggle/{id}(id=${user.id}, status=${status}, gBookingTimes=${gBookingTimes}, lBookingTimes=${lBookingTimes}, keyword=${keyword})}" class="action-link">
+                    Toggle Status
+                </a>
+            </td>
+        </tr>
+        </tbody>
+    </table>
+
+
+</div>
+
+
+
+
+<script>
+    // function setDefaultValues() {
+    //     var gBookingTimes = document.getElementById("gBookingTimes").value;
+    //     var lBookingTimes = document.getElementById("lBookingTimes").value;
+    //
+    //     if (gBookingTimes === "") {
+    //         document.getElementById("gBookingTimes").value = 0;  // Integer.MIN_VALUE
+    //     }
+    //     if (lBookingTimes === "") {
+    //         document.getElementById("lBookingTimes").value = 999;  // Integer.MAX_VALUE
+    //     }
+    // }
+
+    function setDefaultValues() {
+        // get input value of gBookingTimes and lBookingTimes
+        var gBookingTimes = document.getElementById("gBookingTimes").value;
+        var lBookingTimes = document.getElementById("lBookingTimes").value;
+
+        // default value
+        if (gBookingTimes === "") {
+            document.getElementById("gBookingTimes").value = 0;  // Integer.MIN_VALUE
+        }
+
+        if (lBookingTimes === "") {
+            document.getElementById("lBookingTimes").value = 999;  // Integer.MAX_VALUE
+        }
+
+        // save new filter value
+        localStorage.setItem("status", document.getElementById("status").value);
+        localStorage.setItem("gBookingTimes", document.getElementById("gBookingTimes").value);
+        localStorage.setItem("lBookingTimes", document.getElementById("lBookingTimes").value);
+    }
+
+    function toggleItFacilitySelection() {
+        var checkboxes = document.querySelectorAll('input[name="itFacility"]:not(#allItFacilities)');
+        var allCheckbox = document.getElementById('allItFacilities');
+
+        if (allCheckbox.checked) {
+            // if select "All"，cancel other selection
+            checkboxes.forEach(function(checkbox) {
+                checkbox.checked = false;
+            });
+        } else {
+        }
+    }
+
+    // clear filter
+    function clearFilters() {
+        localStorage.removeItem("status");
+        localStorage.removeItem("gBookingTimes");
+        localStorage.removeItem("lBookingTimes");
+
+        window.location.href = "/admin/users";
+    }
+
+</script>
+
+
+</body>
+</html>

@@ -1,0 +1,315 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Login - Online Booking System</title>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+    <style th:inline="css">
+        body {
+            margin: 0;
+            font-family: 'Inter', sans-serif;
+            background: url([[@{/images/xjtlu.png}]]) no-repeat center center fixed;
+            -webkit-background-size: cover;
+            -moz-background-size: cover;
+            -o-background-size: cover;
+            background-size: cover;
+            color: #333;
+        }
+
+        .header {
+            background-color: #1e3a8a;
+            padding: 20px 40px;
+            position: fixed;
+            width: 100%;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 15px;
+            color: #1e3a8a;
+            font-weight: bold;
+            font-size: 24px;
+            text-align: center;
+            line-height: 50px;
+        }
+
+        .system-name {
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            padding-left: 20px;
+        }
+
+        .auth-container {
+            position: absolute;
+            top: 50%;
+            left: 70%;
+            transform: translate(-50%, -50%);
+            background: rgba(255, 255, 255, 0.95);
+            padding: 40px;
+            width: 360px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+        }
+
+        .auth-title {
+            color: #1e3a8a;
+            font-size: 24px;
+            font-weight: 600;
+            margin: 0 0 30px 0;
+            text-align: center;
+        }
+
+        .input-group {
+            margin-bottom: 20px;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            color: #4b5563;
+            font-weight: 500;
+        }
+
+        .input-field {
+            width: 93%;
+            padding: 12px;
+            border: 2px solid #e6f0ff;
+            border-radius: 8px;
+            font-size: 16px;
+            margin: 8px 0;
+            transition: all 0.3s ease;
+        }
+
+        .input-field:focus {
+            border-color: #1e3a8a;
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+        }
+
+        .auth-button {
+            width: 100%;
+            padding: 12px;
+            background-color: #1e3a8a;
+            color: white;
+            border: none;
+            font-size: 16px;
+            font-weight: 500;
+            cursor: pointer;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            margin-top: 10px;
+        }
+
+        .auth-button:hover {
+            background-color: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .error-message {
+            color: #dc2626;
+            margin: 10px 0;
+            font-size: 14px;
+            text-align: center;
+        }
+
+        .auth-links {
+            margin-top: 25px;
+            text-align: center;
+        }
+
+        .auth-links a {
+            color: #1e3a8a;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+            padding: 5px 10px;
+            margin: 0 10px;
+        }
+
+        .auth-links a:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+        .lang-switch {
+            color: white;
+            font-size: 14px;
+        }
+
+        .lang-switch a {
+            color: white;
+            text-decoration: none;
+            margin: 0 5px;
+            transition: all 0.3s ease;
+        }
+
+        .lang-switch a:hover {
+            color: #e6f0ff;
+        }
+
+        .back-button {
+            color: #1e3a8a;
+            text-decoration: none;
+            font-size: 14px;
+            display: block;
+            text-align: center;
+            margin-top: 15px;
+        }
+
+        .back-button:hover {
+            color: #1e40af;
+            text-decoration: underline;
+        }
+
+        .form-container {
+            transition: all 0.3s ease;
+        }
+    </style>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="header">
+    <tr>
+        <td>
+            <table border="0" cellspacing="0" cellpadding="0" width="100%">
+                <tr>
+                    <td>
+                        <table border="0" cellspacing="0" cellpadding="0">
+                            <tr>
+                                <td class="logo">XJTLU</td>
+                                <td class="system-name">Online Booking System</td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+            </table>
+        </td>
+    </tr>
+</table>
+
+<table class="auth-container" border="0" cellspacing="0" cellpadding="0">
+    <tr>
+        <td>
+            <div id="loginFormContainer" class="form-container">
+                <h2 class="auth-title">Welcome Back</h2>
+                <form th:action="@{/login}" th:object="${user}" method="post">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="input-group">
+                                <label for="id">User ID</label>
+                                <input class="input-field" type="text" th:field="*{id}" id="id"
+                                       placeholder="Enter your user ID" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="input-group">
+                                <label for="password">Password</label>
+                                <input class="input-field" type="password" th:field="*{password}" id="password"
+                                       placeholder="Enter your password" required>
+                            </td>
+                        </tr>
+                        <tr th:if="${error}">
+                            <td>
+                                <p class="error-message" th:text="${error}"></p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="submit" class="auth-button" value="Sign In">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="auth-links">
+                                <a href="#" onclick="showForgotPasswordForm(); return false;">Forgot Password?</a>
+                                <a th:href="@{/register}">Sign Up</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+
+            <div id="forgotPasswordFormContainer" class="form-container" style="display: none;">
+                <h2 class="auth-title">Forgot Password</h2>
+                <form th:action="@{/forgotPassword/sendCode}" method="post">
+                    <table width="100%" border="0" cellspacing="0" cellpadding="0">
+                        <tr>
+                            <td class="input-group">
+                                <label for="forgotId">User ID</label>
+                                <input class="input-field" type="text" name="id" id="forgotId"
+                                       placeholder="Enter your user ID" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td class="input-group">
+                                <label for="email">Email</label>
+                                <input class="input-field" type="email" name="email" id="email"
+                                       placeholder="Enter your email" required>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <input type="submit" class="auth-button" value="Send Verification Code">
+                            </td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <a href="#" onclick="showLoginForm(); return false;" class="back-button">Back to
+                                    Login</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </div>
+        </td>
+    </tr>
+</table>
+
+
+<script type="text/javascript">
+    function showForgotPasswordForm() {
+        document.getElementById('loginFormContainer').style.display = 'none';
+        document.getElementById('forgotPasswordFormContainer').style.display = 'block';
+    }
+
+    function showLoginForm() {
+        document.getElementById('loginFormContainer').style.display = 'block';
+        document.getElementById('forgotPasswordFormContainer').style.display = 'none';
+    }
+
+    window.onload = function () {
+        const urlParams = new URLSearchParams(window.location.search);
+        const showForgot = urlParams.get('showForgot');
+        const id = urlParams.get('id');
+        const email = urlParams.get('email');
+        const error = urlParams.get('error');
+
+        // If the forgot password form needs to be displayed
+        if (showForgot === 'true') {
+            showForgotPasswordForm();
+            // If ID and email are available, autofill them
+            if (id) document.getElementById('forgotId').value = id;
+            if (email) document.getElementById('email').value = email;
+            // If there is an error message, display it
+            if (error) {
+                // Find the table in the form
+                const table = document.querySelector('#forgotPasswordFormContainer table');
+                // Find the row of the email input field
+                const emailRow = table.querySelector('#email').closest('tr');
+                const errorRow = document.createElement('tr');
+                errorRow.innerHTML = `
+                <td>
+                    <p class="error-message">${decodeURIComponent(error)}</p>
+                </td>
+            `;
+                emailRow.parentNode.insertBefore(errorRow, emailRow.nextSibling);
+            }
+        }
+    };
+</script>
+</body>
+</html>

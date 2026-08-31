@@ -1,0 +1,192 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <title>Register - Online Booking System</title>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+  <style type="text/css">
+    body {
+      margin: 0;
+      font-family: 'Inter', sans-serif;
+      background: url([[@{/images/xjtlu.png}]]) no-repeat center center fixed;
+      background-size: cover;
+      color: #333;
+    }
+
+
+    .header {
+      background-color: #1e3a8a;
+      padding: 20px 40px;
+    }
+
+    .logo {
+      width: 50px;
+      height: 50px;
+      background-color: white;
+      border-radius: 15px;
+      color: #1e3a8a;
+      font-weight: bold;
+      font-size: 24px;
+      text-align: center;
+      line-height: 50px;
+    }
+
+    .system-name {
+      font-size: 28px;
+      font-weight: 600;
+      color: white;
+      padding-left: 20px;
+    }
+
+    .auth-container {
+      position: absolute;
+      top: 50%;
+      left: 70%;
+      transform: translate(-50%, -50%);
+      background: rgba(255, 255, 255, 0.95);
+      padding: 40px;
+      width: 360px;
+      border-radius: 20px;
+      box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1);
+    }
+
+    .auth-title {
+      color: #1e3a8a;
+      font-size: 24px;
+      font-weight: 600;
+      margin: 0 0 30px 0;
+      text-align: center;
+    }
+
+    .input-group {
+      margin-bottom: 20px;
+    }
+
+    .input-group label {
+      display: block;
+      margin-bottom: 8px;
+      color: #4b5563;
+      font-weight: 500;
+    }
+
+    .input-field {
+      width: 93%;
+      padding: 12px;
+      border: 2px solid #e6f0ff;
+      border-radius: 8px;
+      font-size: 16px;
+      margin: 8px 0;
+      transition: all 0.3s ease;
+    }
+
+    .input-field:focus {
+      border-color: #1e3a8a;
+      outline: none;
+      box-shadow: 0 0 0 3px rgba(30, 58, 138, 0.1);
+    }
+
+    .auth-button {
+      width: 100%;
+      padding: 12px;
+      background-color: #1e3a8a;
+      color: white;
+      border: none;
+      font-size: 16px;
+      font-weight: 500;
+      cursor: pointer;
+      border-radius: 8px;
+      transition: all 0.3s ease;
+      margin-top: 10px;
+    }
+
+    .auth-button:hover {
+      background-color: #1e40af;
+      transform: translateY(-2px);
+    }
+
+    .error-message {
+      color: #dc2626;
+      margin: 10px 0;
+      font-size: 14px;
+    }
+
+    .auth-links {
+      margin-top: 25px;
+      text-align: center;
+    }
+
+    .auth-links a {
+      color: #1e3a8a;
+      text-decoration: none;
+      font-size: 14px;
+      transition: all 0.3s ease;
+    }
+
+    .auth-links a:hover {
+      color: #1e40af;
+      text-decoration: underline;
+    }
+  </style>
+</head>
+<body>
+<table width="100%" border="0" cellspacing="0" cellpadding="0" class="header">
+  <tr>
+    <td>
+      <table border="0" cellspacing="0" cellpadding="0" width="100%">
+        <tr>
+          <td>
+            <table border="0" cellspacing="0" cellpadding="0">
+              <tr>
+                <td class="logo">XJTLU</td>
+                <td class="system-name">Online Booking System</td>
+              </tr>
+            </table>
+          </td>
+        </tr>
+      </table>
+    </td>
+  </tr>
+</table>
+
+<table class="auth-container" border="0" cellspacing="0" cellpadding="0">
+  <tr>
+    <td>
+      <h2 class="auth-title">Create Account</h2>
+      <form th:action="@{/register}" method="post" th:object="${user}">
+        <table width="100%" border="0" cellspacing="0" cellpadding="0">
+          <tr>
+            <td class="input-group">
+              <label for="id">User ID</label>
+              <input class="input-field" type="text" id="id" name="id" required
+                     placeholder="Enter your user ID">
+            </td>
+          </tr>
+          <tr>
+            <td class="input-group">
+              <label for="email">Email</label>
+              <input class="input-field" type="email" id="email" name="email" required
+                     placeholder="Enter your email">
+            </td>
+          </tr>
+          <tr th:if="${error}">
+            <td>
+              <p class="error-message" th:text="${error}"></p>
+            </td>
+          </tr>
+          <tr>
+            <td>
+              <input type="submit" class="auth-button" value="Continue">
+            </td>
+          </tr>
+          <tr>
+            <td class="auth-links">
+              <a th:href="@{/login}">Already have an account? Sign in</a>
+            </td>
+          </tr>
+        </table>
+      </form>
+    </td>
+  </tr>
+</table>
+</body>
+</html>

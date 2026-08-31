@@ -1,0 +1,527 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Booking - Online Booking System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <style type="text/css">
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background: #1e3a8a;
+            padding: 20px 40px;
+            display: table;
+            width: 100%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: table-cell;
+            vertical-align: middle;
+            width: 50%;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 15px;
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: bold;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .system-name {
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 20px;
+        }
+
+        .right-section {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            width: 50%;
+        }
+
+        .main-container {
+            padding: 30px;
+            background-color: #f8f9fa;
+        }
+
+        .room-card {
+            background: white;
+            padding: 40px;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            margin-bottom: 40px;
+        }
+
+        .room-title {
+            font-size: 32px;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .room-details {
+            display: table;
+            width: 100%;
+        }
+
+        .room-info {
+            display: table-cell;
+            width: 50%;
+            padding-right: 40px;
+        }
+
+        .room-image {
+            width: 100%;
+            height: auto;
+            border-radius: 15px;
+            margin-bottom: 20px;
+        }
+
+        .info-section {
+            margin-bottom: 20px;
+        }
+
+        .info-label {
+            font-weight: 600;
+            color: #1e3a8a;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #4b5563;
+        }
+
+        .booking-section {
+            display: table-cell;
+            width: 50%;
+            vertical-align: top;
+            padding-top: 0;
+        }
+
+        .booking-title {
+            font-size: 24px;
+            color: #1e3a8a;
+            margin-bottom: 30px;
+            font-weight: 600;
+        }
+
+        .date-selector {
+            margin-bottom: 30px;
+        }
+
+        .date-input {
+            padding: 12px 20px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            width: 300px;
+        }
+
+        .timeslot-container {
+            margin-bottom: 30px;
+        }
+
+        .timeslot-row {
+            display: table;
+            width: 100%;
+            margin-bottom: 15px;
+        }
+
+        .timeslot-button {
+            display: table-cell;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            background-color: #f9fafb;
+            cursor: pointer;
+            text-align: center;
+            font-weight: 500;
+            width: 25%;
+            margin-right: 15px;
+        }
+
+        .timeslot-button:hover {
+            background-color: #e6f0ff;
+            border-color: #1e3a8a;
+        }
+
+        .timeslot-button.selected {
+            background-color: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .timeslot-button.disabled {
+            background-color: #f3f4f6;
+            color: #9ca3af;
+            cursor: not-allowed;
+            border-color: #e5e7eb;
+            pointer-events: none;
+        }
+
+        .timeslot-button.booked {
+            background-color: #fee2e2;
+            color: #991b1b;
+            cursor: not-allowed;
+            border-color: #fecaca;
+            pointer-events: none;
+        }
+
+        .reason-input {
+            width: 100%;
+            padding: 15px;
+            border: 2px solid #e5e7eb;
+            border-radius: 12px;
+            font-size: 15px;
+            margin-bottom: 30px;
+            min-height: 100px;
+        }
+
+        .submit-button {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px 30px;
+            border: none;
+            border-radius: 12px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+        }
+
+        .submit-button:hover {
+            background-color: #1e40af;
+        }
+
+        .message {
+            margin-top: 20px;
+            padding: 15px;
+            border-radius: 12px;
+            font-weight: 500;
+        }
+
+        .success-message {
+            background-color: #d1fae5;
+            color: #065f46;
+        }
+
+        .error-message {
+            background-color: #fee2e2;
+            color: #991b1b;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="logo-container">
+        <div class="logo">XJTLU</div>
+        <div class="system-name">Online Booking System</div>
+    </div>
+    <div class="right-section">
+        <a href="/welcome" style="color: white; text-decoration: none; margin-right: 20px;">
+            <i class="fas fa-home"></i> Back to Home
+        </a>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="room-card">
+        <div class="room-title" th:text="${room.id}">Meeting Room Name</div>
+        <div class="room-details">
+            <div class="room-info">
+                <!-- image display -->
+                <img th:if="${room.imgUrl != null}" th:src="${room.imgUrl}" alt="Meeting Room Image" class="room-image">
+                <div th:unless="${room.imgUrl != null}" class="no-image-text" style="
+        width: 100%;
+        height: 200px;
+        background-color: #f3f4f6;
+        border-radius: 15px;
+        margin-bottom: 20px;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: #6b7280;
+        font-size: 16px;
+        font-weight: 500;">
+                    No image available for display
+                </div>
+
+                <!-- room information display -->
+                <div class="info-section">
+                    <div class="info-label">Capacity</div>
+                    <div class="info-value" th:text="${room.capacity} + ' people'">30 people</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Facilities</div>
+                    <div class="info-value" th:text="${room.itFacility}">Projector, Whiteboard, Video Conference System</div>
+                </div>
+                <div class="info-section">
+                    <div class="info-label">Location</div>
+                    <div class="info-value" th:text="${room.location}">East Side, 3rd Floor</div>
+                </div>
+            </div>
+            <div class="booking-section">
+                <div class="booking-title">Booking Information</div>
+                <div class="date-selector">
+                    <input type="text" class="date-input" id="bookingDate" onfocus="this.type='date'"
+                           onchange="checkAvailableTimeslots()" required>
+                </div>
+                <div class="timeslot-container" id="timeslotContainer">
+                    <!-- Timeslots will be generated by JavaScript -->
+                </div>
+                <textarea class="reason-input" placeholder="Please enter your booking purpose..."
+                          id="bookingReason"></textarea>
+                <button class="submit-button" onclick="submitBooking()">Submit Booking</button>
+                <div id="messageContainer"></div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<input type="hidden" id="roomId" th:value="${room.id}">
+<input type="hidden" id="disabledTimeslots" th:value="${indices}">
+
+<script type="text/javascript">
+    var selectedTimeslots = [];
+    var disabledIndices = JSON.parse(document.getElementById('disabledTimeslots').value || '[]');
+    var newDisabledIndices = [];
+    var roomId = document.getElementById('roomId').value;
+
+    var timeslots = [];
+    for (var hour = 8; hour < 22; hour++) {
+        for (var minute = 0; minute < 60; minute += 30) {
+            var startTime = (hour < 10 ? '0' : '') + hour + ':' + (minute < 10 ? '0' : '') + minute;
+            var endHour = minute === 30 ? hour + 1 : hour;
+            var endMinute = minute === 30 ? 0 : 30;
+            var endTime = (endHour < 10 ? '0' : '') + endHour + ':' + (endMinute < 10 ? '0' : '') + endMinute;
+            timeslots.push(startTime + '-' + endTime);
+        }
+    }
+
+    window.onload = function () {
+        var today = new Date();
+        var maxDate = new Date();
+        maxDate.setDate(today.getDate() + 6);
+
+        var dd = String(today.getDate()).padStart(2, '0');
+        var mm = String(today.getMonth() + 1).padStart(2, '0');
+        var yyyy = today.getFullYear();
+        var minDate = yyyy + '-' + mm + '-' + dd;
+
+        var maxDD = String(maxDate.getDate()).padStart(2, '0');
+        var maxMM = String(maxDate.getMonth() + 1).padStart(2, '0');
+        var maxYYYY = maxDate.getFullYear();
+        var maxDateStr = maxYYYY + '-' + maxMM + '-' + maxDD;
+
+        var dateInput = document.getElementById('bookingDate');
+        dateInput.min = minDate;
+        dateInput.max = maxDateStr;
+
+        dateInput.addEventListener('input', function (e) {
+            var selectedDate = new Date(this.value);
+            var todayStart = new Date();
+            todayStart.setHours(0, 0, 0, 0);
+
+            if (selectedDate < todayStart || selectedDate > maxDate) {
+                showMessage('Please select a date within the next 7 days (including today)', 'error');
+                this.value = '';
+            }
+        });
+    };
+
+    function checkAvailableTimeslots() {
+        var date = document.getElementById('bookingDate').value;
+        if (!date) return;
+
+        disabledIndices = [];
+
+        var selectedDate = new Date(date);
+        var now = new Date();
+
+        if (selectedDate.toDateString() === now.toDateString()) {
+            var currentHour = now.getHours();
+            var currentMinute = now.getMinutes();
+            var currentIndex = (currentHour - 8) * 2 + Math.floor(currentMinute / 30);
+
+            for (var i = 0; i < currentIndex; i++) {
+                if (!disabledIndices.includes(i)) {
+                    disabledIndices.push(i);
+                }
+            }
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('GET', '/schedule?roomId=' + roomId + '&date=' + date, true);
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4 && xhr.status === 200) {
+                var bookings = JSON.parse(xhr.responseText);
+                newDisabledIndices = [];
+                bookings.forEach(function (booking) {
+                    var startTime = booking.startTime.split(':').slice(0, 2).join(':');
+                    var [hour, minute] = startTime.split(':').map(Number);
+                    var index = (hour - 8) * 2 + (minute === 30 ? 1 : 0);
+                    newDisabledIndices.push(index);
+                });
+
+                renderTimeslots();
+
+                selectedTimeslots = [];
+                var buttons = document.querySelectorAll('.timeslot-button');
+                buttons.forEach(function (button) {
+                    button.classList.remove('selected');
+                });
+            }
+        };
+
+        xhr.send();
+    }
+
+    function renderTimeslots() {
+        var timeslotContainer = document.getElementById('timeslotContainer');
+        timeslotContainer.innerHTML = '';
+        var currentRow;
+
+        timeslots.forEach(function (timeslot, index) {
+            if (index % 4 === 0) {
+                currentRow = document.createElement('div');
+                currentRow.className = 'timeslot-row';
+                timeslotContainer.appendChild(currentRow);
+            }
+
+            var button = document.createElement('div');
+            button.className = 'timeslot-button';
+            button.innerHTML = timeslot;
+            button.setAttribute('data-index', index);
+
+            if (disabledIndices.includes(index)) {
+                button.classList.add('disabled');
+            } else if (newDisabledIndices.includes(index)) {
+                button.classList.add('booked');
+            } else {
+                button.onclick = function () {
+                    toggleTimeslot(this);
+                };
+            }
+
+            currentRow.appendChild(button);
+        });
+    }
+
+    function toggleTimeslot(button) {
+        if (button.className.indexOf('disabled') !== -1) return;
+
+        var index = parseInt(button.getAttribute('data-index'));
+        var isSelected = button.className.indexOf('selected') !== -1;
+
+        if (isSelected) {
+            button.className = button.className.replace(' selected', '');
+            selectedTimeslots = selectedTimeslots.filter(function (i) {
+                return i !== index;
+            });
+        } else {
+            if (selectedTimeslots.length > 0) {
+                var minIndex = Math.min.apply(null, selectedTimeslots);
+                var maxIndex = Math.max.apply(null, selectedTimeslots);
+                if (index !== minIndex - 1 && index !== maxIndex + 1) {
+                    showMessage('Please select continuous time slots', 'error');
+                    return;
+                }
+            }
+            button.className += ' selected';
+            selectedTimeslots.push(index);
+        }
+    }
+
+    function submitBooking() {
+        var date = document.getElementById('bookingDate').value;
+        var reason = document.getElementById('bookingReason').value;
+
+        if (!date) {
+            showMessage('Please select a booking date', 'error');
+            return;
+        }
+
+        var selectedDate = new Date(date);
+        var today = new Date();
+        today.setHours(0, 0, 0, 0);
+        var maxDate = new Date();
+        maxDate.setDate(today.getDate() + 7);
+
+        if (selectedDate < today || selectedDate > maxDate) {
+            showMessage('Please select a date within the next 7 days (including today)', 'error');
+            return;
+        }
+
+        if (selectedTimeslots.length === 0) {
+            showMessage('Please select time slots', 'error');
+            return;
+        }
+
+        if (!reason) {
+            showMessage('Please enter booking purpose', 'error');
+            return;
+        }
+
+        var xhr = new XMLHttpRequest();
+        xhr.open('POST', '/MakeBooking', true);
+        xhr.setRequestHeader('Content-Type', 'application/json');
+
+        xhr.onreadystatechange = function () {
+            if (xhr.readyState === 4) {
+                if (xhr.status === 200) {
+                    showMessage('Booking successful!', 'success');
+                    disableSelectedTimeslots();
+                    selectedTimeslots.forEach(function (index) {
+                        var button = document.querySelector('[data-index="' + index + '"]');
+                        button.className = button.className.replace(' selected', '');
+                    });
+                    selectedTimeslots = [];
+                    document.getElementById('bookingReason').value = '';
+                } else {
+                    showMessage(xhr.responseText, 'error');
+                }
+            }
+        };
+
+        xhr.send(JSON.stringify({
+            roomId: roomId,
+            date: date,
+            selectedIndices: selectedTimeslots,
+            reason: reason
+        }));
+    }
+
+    function showMessage(message, type) {
+        var messageContainer = document.getElementById('messageContainer');
+        messageContainer.innerHTML = '<div class="message ' + type + '-message">' + message + '</div>';
+    }
+
+    function disableSelectedTimeslots() {
+        newDisabledIndices = [...new Set([...newDisabledIndices, ...selectedTimeslots])];
+        renderTimeslots();
+        selectedTimeslots = [];
+        document.querySelectorAll('.timeslot-button').forEach(button => {
+            button.classList.remove('selected');
+        });
+    }
+</script>
+</body>
+</html>

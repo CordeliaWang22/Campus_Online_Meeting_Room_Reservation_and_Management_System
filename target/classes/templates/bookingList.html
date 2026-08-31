@@ -1,0 +1,480 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Online Booking System</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        #header {
+            background: #1e3a8a;
+            height: 80px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #title {
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 80px;
+            padding-left: 20px;
+            float: left;
+            color: white;
+        }
+
+        #logout {
+            float: right;
+            margin: 20px;
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #logout:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 200px;
+            background-color: white;
+            height: calc(100vh - 80px);
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-button {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #1e3a8a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #content {
+            margin-left: 240px;
+            margin-top: 100px;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        input[type="text"], select {
+            padding: 10px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin: 10px 0;
+            font-size: 14px;
+        }
+
+        input[type="submit"], button {
+            padding: 10px 20px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        input[type="submit"]:hover, button:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        table {
+            background: white;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+
+        th {
+            background: #1e3a8a;
+            color: white;
+            padding: 15px;
+            font-weight: 600;
+        }
+
+        td {
+            padding: 12px;
+            border-bottom: 1px solid #eee;
+            color: #4b5563;
+        }
+
+        tr:hover {
+            background: #f8f9fa;
+        }
+
+        .pagination {
+            margin-top: 30px;
+            background: white;
+            padding: 20px;
+            border-radius: 12px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+        }
+
+        .pagination ul {
+            list-style: none;
+            display: flex;
+            gap: 10px;
+            padding: 0;
+            margin: 10px 0;
+            justify-content: center;
+        }
+
+        .pagination li a {
+            text-decoration: none;
+            padding: 8px 16px;
+            border: 1px solid #1e3a8a;
+            border-radius: 8px;
+            color: #1e3a8a;
+            font-weight: 600;
+            transition: all 0.3s ease;
+        }
+
+        .pagination li a:hover {
+            background: #1e3a8a;
+            color: white;
+        }
+
+        .pagination li a.active-page {
+            background: #1e3a8a;
+            color: white;
+            border-color: #1e3a8a;
+        }
+
+        .error-message {
+            color: #dc2626;
+            font-size: 14px;
+            margin-top: 5px;
+        }
+    </style>
+
+
+    <script>
+        function logout() {
+            alert("You have been logged out.");
+        }
+
+        function goTo(page) {
+            window.location.href = page;
+        }
+
+        function goToBookingByUser() {
+            const userId = document.getElementById("userId").value.trim();
+            if (userId === "") {
+                alert("Please enter a User ID.");
+                return false;
+            }
+            window.location.href = "/admin/booking/user/" + encodeURIComponent(userId);
+            return false;
+        }
+
+        // set time and hidden input
+        function setCurrentDateTime() {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = "00";
+
+            const currentDate = `${yyyy}-${mm}-${dd}`;
+            const currentTime = `${hh}:${min}:00`;
+
+            const dateInput = document.getElementById("autoCurrentDate");
+            const timeInput = document.getElementById("autoCurrentTime");
+
+            if (dateInput && !dateInput.value) {
+                dateInput.value = currentDate;
+            }
+
+            if (timeInput && !timeInput.value) {
+                timeInput.value = currentTime;
+            }
+
+            // Debug log
+            console.log("✅ Date & Time set:", dateInput.value, timeInput.value);
+        }
+
+        function ensureDateTimeFilled() {
+            setCurrentDateTime();
+            return true; // allow form submit
+        }
+
+        window.addEventListener("DOMContentLoaded", function () {
+            setCurrentDateTime();
+
+            const params = new URLSearchParams(window.location.search);
+            const userId = params.get("userId");
+            if (userId) {
+                const input = document.getElementById("userId");
+                if (input) input.value = userId;
+            }
+        });
+    </script>
+
+
+</head>
+<body>
+<div id="header">
+    <div id="title">Online Booking System</div>
+    <input type="button" id="logout" value="Log out" onclick="logout()">
+</div>
+
+<div id="sidebar">
+    <input class="nav-button" type="button" value="Room Management" onclick="goTo('/admin/room')">
+    <input class="nav-button" type="button" value="Booking Management" onclick="goTo('/admin/booking')">
+    <input class="nav-button" type="button" value="User Management" onclick="goTo('/admin/users')">
+</div>
+
+<div id="content">
+    <h2>Booking Management</h2>
+
+    <form method="get" action="/admin/booking/id">
+        <label>Search by Booking ID:</label><br>
+        <input type="text" name="id" placeholder="Enter ID" th:value="${param.id}">
+        <input type="submit" value="Search"><br>
+
+        <!--  显示错误信息 -->
+        <span th:if="${errorMessage}" th:text="${errorMessage}"
+              style="color:red; font-size: 13px; font-weight: normal;"></span>
+    </form>
+
+    <!--
+      <form onsubmit="return goToBookingByUser();">
+        <label>Search by User ID:</label>
+        <input type="text" id="userId" placeholder="Enter User ID">
+        <input type="submit" value="Search">
+      </form>
+      -->
+
+    <form method="get" action="/admin/booking/user/search">
+        <label>Search by User ID:</label>
+        <input type="text" name="userId" id="userId" placeholder="Enter User ID" required>
+        <input type="hidden" name="currentDate" id="autoCurrentDate">
+        <input type="hidden" name="currentTime" id="autoCurrentTime">
+        <input type="submit" value="Search">
+    </form>
+
+
+    <!-- Status Filter table-->
+    <form method="get" action="/admin/booking/filter" onsubmit="return ensureDateTimeFilled2();">
+        <label>Status:</label>
+        <select name="status">
+            <option value="All" th:selected="${param.status == 'All'}">All</option>
+            <option value="Processing" th:selected="${param.status == 'Processing'}">Processing</option>
+            <option value="Finished" th:selected="${param.status == 'Finished'}">Finished</option>
+        </select>
+        <input type="hidden" name="currentDate" id="autoCurrentDate2">
+        <input type="hidden" name="currentTime" id="autoCurrentTime2">
+        <input type="submit" value="Filter by Status">
+    </form>
+
+    <div>
+        <a th:href="@{/admin/booking}"><button type="button">Clear</button></a>
+    </div>
+
+    <table>
+        <thead>
+        <tr>
+            <th>Number</th>
+            <th>Date</th>
+            <th>Start Time</th>
+            <th>End Time</th>
+            <th>Room</th>
+            <th>User</th>
+            <th>Booking ID</th>
+            <th>Reason</th>
+            <th>Action</th>
+        </tr>
+        </thead>
+        <tbody>
+        <tr th:each="booking, iterStat : ${bookings}"  th:data-date="${booking.date}" th:data-endtime="${booking.endTime}">
+            <td th:text="${(currentPage - 1) * 10 + iterStat.count}">1</td>
+            <td th:text="${booking.date}">2025/03/29</td>
+            <td th:text="${booking.startTime}">18:00</td>
+            <td th:text="${booking.endTime}">20:00</td>
+            <td th:text="${booking.roomId}">BSG32</td>
+            <td th:text="${booking.userId}">2200001</td>
+            <td th:text="${booking.id}">20250329001</td>
+            <td th:text="${booking.reason}">Meeting</td>
+            <td>
+                <form th:action="@{'/admin/booking/' + ${booking.id}}" method="post">
+                    <input type="hidden" name="_method" value="delete" />
+                    <button type="submit" class="reject-button"
+                            onclick="return confirm('Are you sure you want to delete this booking?')">
+                        Reject
+                    </button>
+                </form>
+            </td>
+
+        </tr>
+        </tbody>
+    </table>
+
+    <div class="pagination" style="margin-top: 20px;">
+        <span>Current Page <span th:text="${currentPage}">1</span> ，Total Page <span th:text="${totalPages}">1</span></span>
+
+        <div style="margin-top: 10px;">
+            <ul th:with="prevPage=${currentPage - 1}, nextPage=${currentPage + 1}">
+
+                <!-- Booking ID search -->
+                <th:block th:if="${param.id} == null">
+
+                    <!-- User ID paging link -->
+                    <th:block th:if="${searchUserId != null}">
+                        <li th:if="${currentPage > 1}">
+                            <a th:href="@{'/admin/booking/user/search'(userId=${searchUserId}, currentDate=${param.currentDate}, currentTime=${param.currentTime}, page=${prevPage})}">Prev</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence((currentPage > 3 ? currentPage - 2 : 1), (currentPage + 2 < totalPages ? currentPage + 2 : totalPages))}">
+                            <a th:href="@{'/admin/booking/user/search'(userId=${searchUserId}, currentDate=${param.currentDate}, currentTime=${param.currentTime}, page=${i})}"
+                               th:text="${i}"
+                               th:classappend="${i == currentPage} ? 'active-page'">
+                            </a>
+                        </li>
+                        <li th:if="${currentPage < totalPages}">
+                            <a th:href="@{'/admin/booking/user/search'(userId=${searchUserId}, currentDate=${param.currentDate}, currentTime=${param.currentTime}, page=${nextPage})}">Next</a>
+                        </li>
+                    </th:block>
+
+                    <!-- Status paging link -->
+                    <th:block th:if="${param.status != null}">
+                        <li th:if="${currentPage > 1}">
+                            <a th:href="@{'/admin/booking/filter'(status=${param.status}, currentDate=${param.currentDate}, currentTime=${param.currentTime}, page=${prevPage})}">Prev</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence((currentPage > 3 ? currentPage - 2 : 1), (currentPage + 2 < totalPages ? currentPage + 2 : totalPages))}">
+                            <a th:href="@{'/admin/booking/filter'(status=${param.status}, currentDate=${param.currentDate}, currentTime=${param.currentTime}, page=${i})}"
+                               th:text="${i}"
+                               th:classappend="${i == currentPage} ? 'active-page'">
+                            </a>
+                        </li>
+                        <li th:if="${currentPage < totalPages}">
+                            <a th:href="@{'/admin/booking/filter'(status=${param.status}, currentDate=${param.currentDate}, currentTime=${param.currentTime}, page=${nextPage})}">Next</a>
+                        </li>
+                    </th:block>
+
+                    <!-- default paging: jumping /admin/booking?page=... -->
+                    <th:block th:if="${searchUserId == null} and ${param.status == null}">
+                        <li th:if="${currentPage > 1}">
+                            <a th:href="@{'/admin/booking'(page=${prevPage})}">Prev</a>
+                        </li>
+                        <li th:each="i : ${#numbers.sequence((currentPage > 3 ? currentPage - 2 : 1), (currentPage + 2 < totalPages ? currentPage + 2 : totalPages))}">
+                            <a th:href="@{'/admin/booking'(page=${i})}"
+                               th:text="${i}"
+                               th:classappend="${i == currentPage} ? 'active-page'">
+                            </a>
+                        </li>
+                        <li th:if="${currentPage < totalPages}">
+                            <a th:href="@{'/admin/booking'(page=${nextPage})}">Next</a>
+                        </li>
+                    </th:block>
+                </th:block>
+            </ul>
+        </div>
+    </div>
+
+</div>
+
+<script>
+    function ensureDateTimeFilled2() {
+        const dateInput = document.getElementById("autoCurrentDate2");
+        const timeInput = document.getElementById("autoCurrentTime2");
+
+        if (!dateInput || !timeInput) return true; // cfallback
+
+        if (!dateInput.value || !timeInput.value) {
+            const now = new Date();
+            const yyyy = now.getFullYear();
+            const mm = String(now.getMonth() + 1).padStart(2, '0');
+            const dd = String(now.getDate()).padStart(2, '0');
+            const hh = String(now.getHours()).padStart(2, '0');
+            const min = "00";
+
+            dateInput.value = `${yyyy}-${mm}-${dd}`;
+            timeInput.value = `${hh}:${min}:00`;
+        }
+
+        console.log("✅ Filled before submit:", dateInput.value, timeInput.value);
+        return true;
+    }
+
+    window.addEventListener("DOMContentLoaded", function () {
+        const now = new Date();
+
+        document.querySelectorAll('tr[data-date][data-endtime]').forEach(row => {
+            const dateStr = row.getAttribute('data-date');       // e.g., "2025-04-24"
+            const timeStr = row.getAttribute('data-endtime');    // e.g., "15:00"
+
+            // concatenate. eg. "2025-04-24T15:00:00"
+            const combinedDateTimeStr = `${dateStr}T${timeStr}:00`;
+
+            const endTime = new Date(combinedDateTimeStr); // turn to Date Object
+
+            if (endTime < now) {
+                const rejectBtn = row.querySelector('.reject-button');
+                if (rejectBtn) {
+                    rejectBtn.disabled = true;
+                    rejectBtn.style.backgroundColor = "#ccc";
+                    rejectBtn.style.cursor = "not-allowed";
+                    rejectBtn.title = "Cannot reject a past booking.";
+                }
+            }
+
+            // Debug log
+            console.log("📅 Checking:", combinedDateTimeStr, "| Now:", now.toISOString(), "| Disabled:", endTime < now);
+        });
+    });
+
+</script>
+
+
+</body>
+</html>
