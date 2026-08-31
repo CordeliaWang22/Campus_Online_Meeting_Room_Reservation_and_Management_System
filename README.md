@@ -121,7 +121,7 @@ Admin catalog: search by room ID, filter by IT facility, availability, building 
 
 **Stack:** Thymeleaf admin layout, `adminRoomController`, multipart room images, JPA `Room` entity.
 
-![Admin rooms](demo/admin_rooms.png)
+![Admin rooms](demo/admin_room.png)
 
 ### 9. Admin — booking management 
 
@@ -141,7 +141,7 @@ Search users by name / email / phone. Filter by lock status and booking-count ra
 
 **Stack:** `adminUserController`, projection `UserView` (password not exposed in the list).
 
-![Admin users](demo/admin_users.png)
+![Admin users](demo/admin_user.png)
 
 ---
 
