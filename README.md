@@ -4,8 +4,8 @@ A full-stack web application for campus meeting-room booking: student registrati
 
 面向校园会议室资源的全栈 Web 系统：学生注册与邮箱验证、会议室检索与预约、个人预约管理，以及管理员对房间、预约和账号的后台维护。
 
-> Course / portfolio project (XJTLU). Built with **Spring Boot + Thymeleaf + MySQL**.  
-> 西交利物浦大学课程 / 作品集项目，技术栈为 **Spring Boot + Thymeleaf + MySQL**。
+> Built with **Spring Boot + Thymeleaf + MySQL**.  
+> 技术栈为 **Spring Boot + Thymeleaf + MySQL**。
 
 ---
 
