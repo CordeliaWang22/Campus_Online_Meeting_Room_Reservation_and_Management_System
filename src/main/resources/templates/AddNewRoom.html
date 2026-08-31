@@ -1,0 +1,515 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+    <title>Add New Room</title>
+    <link href="https://fonts.googleapis.com/css?family=Roboto" rel="stylesheet">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        #header {
+            background: #1e3a8a;
+            height: 80px;
+            width: 100%;
+            position: fixed;
+            top: 0;
+            left: 0;
+            z-index: 1000;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        #title {
+            font-size: 32px;
+            font-weight: 600;
+            line-height: 80px;
+            padding-left: 20px;
+            float: left;
+            color: white;
+        }
+
+        #logout {
+            float: right;
+            margin: 20px;
+            padding: 10px 20px;
+            background: white;
+            border: none;
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        #logout:hover {
+            background: #f0f0f0;
+            transform: translateY(-2px);
+        }
+
+        #sidebar {
+            position: fixed;
+            top: 80px;
+            left: 0;
+            width: 200px;
+            background-color: white;
+            height: calc(100vh - 80px);
+            padding: 30px 20px;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .nav-button {
+            display: block;
+            margin-bottom: 15px;
+            width: 100%;
+            padding: 12px;
+            font-size: 15px;
+            background: #f8f9fa;
+            border: none;
+            border-radius: 12px;
+            color: #1e3a8a;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .nav-button:hover {
+            background: #1e3a8a;
+            color: white;
+            transform: translateY(-2px);
+        }
+
+        #content {
+            margin-left: 240px;
+            margin-top: 100px;
+            padding: 30px;
+        }
+
+        h2 {
+            color: #1e3a8a;
+            font-size: 28px;
+            margin-bottom: 30px;
+        }
+
+        form {
+            background: white;
+            padding: 30px;
+            border-radius: 12px;
+            margin-bottom: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            max-width: 600px;
+        }
+
+        label {
+            display: block;
+            color: #4b5563;
+            font-weight: 600;
+            margin-bottom: 8px;
+        }
+
+        input[type="text"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 12px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            margin-bottom: 20px;
+            font-size: 14px;
+            transition: border-color 0.3s ease;
+        }
+
+        input[type="text"]:focus,
+        input[type="number"]:focus,
+        select:focus {
+            border-color: #1e3a8a;
+            outline: none;
+        }
+
+        .facility-checkbox-group {
+            margin-bottom: 20px;
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+
+        .facility-checkbox {
+            display: flex;
+            align-items: center;
+            background: #f8f9fa;
+            padding: 10px 15px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+        }
+
+        .facility-checkbox:hover {
+            background: #e2e8f0;
+        }
+
+        .facility-checkbox input[type="checkbox"] {
+            margin-right: 8px;
+        }
+
+        .facility-checkbox label {
+            margin: 0;
+            font-size: 14px;
+        }
+
+        /* 自定义文件上传按钮样式 */
+        input[type="file"] {
+            width: 0.1px;
+            height: 0.1px;
+            opacity: 0;
+            overflow: hidden;
+            position: absolute;
+            z-index: -1;
+        }
+
+        .file-upload-label {
+            display: inline-block;
+            width: 100%;
+            padding: 12px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            text-align: center;
+            margin-bottom: 15px;
+        }
+
+        .file-upload-label:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .file-name {
+            display: block;
+            margin-top: 8px;
+            font-size: 14px;
+            color: #4b5563;
+        }
+
+        input[type="submit"] {
+            width: 100%;
+            padding: 12px;
+            background: #1e3a8a;
+            color: white;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-top: 20px;
+        }
+
+        input[type="submit"]:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        #imagePreview {
+            margin: 15px 0;
+            text-align: center;
+        }
+
+        #previewImg {
+            max-width: 300px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+
+        /* New button styles */
+        .btn {
+            padding: 12px 24px;
+            border: none;
+            border-radius: 8px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            margin-right: 10px;
+            font-size: 16px;
+        }
+
+        .btn-save {
+            background: #1e3a8a;
+            color: white;
+        }
+
+        .btn-save:hover {
+            background: #1e40af;
+            transform: translateY(-2px);
+        }
+
+        .btn-cancel {
+            background: #ef4444;
+            color: white;
+        }
+
+        .btn-cancel:hover {
+            background: #dc2626;
+            transform: translateY(-2px);
+        }
+    </style>
+</head>
+<body>
+<div id="header">
+    <div id="title">Add New Room</div>
+    <input type="button" id="logout" value="Log out" onclick="logout()">
+</div>
+
+<div id="sidebar">
+    <input class="nav-button" type="button" value="Room Management" onclick="goTo('/admin/room')">
+    <input class="nav-button" type="button" value="Booking Management" onclick="goTo('/admin/booking')">
+    <input class="nav-button" type="button" value="User Management" onclick="goTo('/admin/users')">
+</div>
+
+<div id="content">
+    <h2>Add New Room</h2>
+
+    <div th:if="${error != null}" style="color: red;">
+        <p th:text="${error}"></p> <!-- show error message -->
+    </div>
+
+    <form action="/admin/room/add" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+        <label for="roomId">Room ID:</label>
+        <input type="text" id="roomId" name="id" placeholder="automatically generate (no need for input)" required readonly>
+
+        <label for="roomNumber">Room Number:</label>
+        <input type="text" id="roomNumber" name="number" required>
+
+        <label>IT Facility:</label>
+        <div class="facility-checkbox-group">
+            <div class="facility-checkbox">
+                <input type="checkbox" id="screen/projector" name="itFacility" value="Screen/Projector">
+                <label for="screen/projector">Screen/Projector</label>
+            </div>
+            <div class="facility-checkbox">
+                <input type="checkbox" id="airConditioner" name="itFacility" value="Air Conditioner">
+                <label for="airConditioner">Air Conditioner</label>
+            </div>
+            <div class="facility-checkbox">
+                <input type="checkbox" id="computer" name="itFacility" value="Computer">
+                <label for="computer">Computer</label>
+            </div>
+            <div class="facility-checkbox">
+                <input type="checkbox" id="speaker" name="itFacility" value="Speaker">
+                <label for="speaker">Speaker</label>
+            </div>
+            <div class="facility-checkbox">
+                <input type="checkbox" id="nothing" name="itFacility" value="Nothing" onclick="toggleNothingCheckbox()">
+                <label for="nothing">Nothing</label>
+            </div>
+        </div>
+        <input type="hidden" id="hiddenItFacility" name="itFacility">
+
+        <!--        <label for="location">Location:</label>-->
+        <!--        <input type="text" id="location" name="location" required>-->
+
+        <label>Location:</label>
+        <div class="facility-checkbox-group">
+            <input type="radio" id="FB" name="location" value="FB" required>
+            <label for="FB">FB</label>
+
+            <input type="radio" id="CB" name="location" value="CB">
+            <label for="CB">CB</label>
+
+            <input type="radio" id="SA" name="location" value="SA">
+            <label for="SA">SA</label>
+
+            <input type="radio" id="SB" name="location" value="SB">
+            <label for="SB">SB</label>
+
+            <input type="radio" id="SC" name="location" value="SC">
+            <label for="SC">SC</label>
+
+            <input type="radio" id="SD" name="location" value="SD">
+            <label for="SD">SD</label>
+
+            <input type="radio" id="MA" name="location" value="MA">
+            <label for="MA">MA</label>
+
+            <input type="radio" id="MB" name="location" value="MB">
+            <label for="MB">MB</label>
+
+            <input type="radio" id="EB" name="location" value="EB">
+            <label for="EB">EB</label>
+
+            <input type="radio" id="EE" name="location" value="EE">
+            <label for="EE">EE</label>
+
+            <input type="radio" id="ES" name="location" value="ES">
+            <label for="ES">ES</label>
+
+            <input type="radio" id="HS" name="location" value="HS">
+            <label for="HS">HS</label>
+
+            <input type="radio" id="DB" name="location" value="DB">
+            <label for="DB">DB</label>
+
+            <input type="radio" id="PB" name="location" value="PB">
+            <label for="PB">PB</label>
+
+            <input type="radio" id="BS" name="location" value="BS">
+            <label for="BS">BS</label>
+        </div>
+
+        <label for="capacity">Capacity:</label>
+        <input type="number" id="capacity" name="capacity" min="1" required>
+
+        <label for="availability">Availability:</label>
+        <select id="availability" name="availability">
+            <option value="true">Available</option>
+            <option value="false">Unavailable</option>
+        </select>
+
+        <div class="form-group">
+            <label>Room Image:</label>
+            <label for="roomImage" class="file-upload-label">
+                Choose File
+                <span class="file-name"></span>
+            </label>
+            <input type="file" id="roomImage" name="imageFile" accept="image/*">
+
+            <div id="imagePreview">
+                <img id="previewImg" style="display: none;">
+            </div>
+        </div>
+
+        <!--        <input type="submit" value="Add Room">-->
+        <div style="margin-top: 20px; display: flex; justify-content: space-between;">
+            <button type="submit" class="btn btn-save">Save Changes</button>
+            <button type="button" class="btn btn-cancel" onclick="window.location.href='/admin/room'">Cancel</button>
+        </div>
+    </form>
+</div>
+
+<script>
+    function logout() {
+        alert("You have been logged out.");
+    }
+
+    function goTo(page) {
+        window.location.href = page;
+    }
+
+    function collectFacilities() {
+        const checkboxes = document.querySelectorAll('input[name="itFacility"]:checked');
+        const facilities = new Set();
+        checkboxes.forEach(checkbox => {
+            facilities.add(checkbox.value);
+        });
+        let facilitiesStr = Array.from(facilities).join(',');
+
+        if (facilitiesStr.length > 0 && facilitiesStr.endsWith(',')) {
+            facilitiesStr = facilitiesStr.slice(0, -1);
+        }
+
+        document.getElementById('hiddenItFacility').value = facilitiesStr;
+        return true;
+    }
+
+    // upload and display of the file
+    document.getElementById('roomImage').addEventListener('change', function(e) {
+        // show file name
+        const fileName = e.target.files[0] ? e.target.files[0].name : 'No file selected';
+        const fileNameSpan = this.previousElementSibling.querySelector('.file-name');
+        fileNameSpan.textContent = fileName;
+
+        // show image
+        const file = e.target.files[0];
+        const previewImg = document.getElementById('previewImg');
+
+        if (file) {
+            const reader = new FileReader();
+            reader.onload = function(event) {
+                previewImg.src = event.target.result;
+                previewImg.style.display = 'block';
+            };
+            reader.readAsDataURL(file);
+        } else {
+            previewImg.style.display = 'none';
+        }
+    });
+
+    function validateForm() {
+        // use validateITFacilitySelection and collectFacilities
+        if (!validateITFacilitySelection()) {
+            return false; // prevent from submission
+        }
+        if (!collectFacilities()) {
+            return false; // prevent from submission
+        }
+        return true; // allow submission
+    }
+
+    function validateITFacilitySelection() {
+        //get all selected checkboxes
+        const checkboxes = document.querySelectorAll('input[name="itFacility"]:checked');
+
+        // no select, prevent from submission
+        if (checkboxes.length === 0) {
+            alert("Please select at least one IT facility.");
+            return false;
+        }
+
+        // transfer the selected it facilites to hiiden field
+        const facilities = Array.from(checkboxes).map(checkbox => checkbox.value);
+        document.getElementById('hiddenItFacility').value = facilities.join(',');
+
+        return true;
+    }
+
+    function toggleNothingCheckbox() {
+        const nothingCheckbox = document.getElementById('nothing');
+        const checkboxes = document.querySelectorAll('input[name="itFacility"]:not(#nothing)');
+
+        if (nothingCheckbox.checked) {
+            // forbidden the other checkbox to select
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = true;
+                checkbox.checked = false;
+            });
+        } else {
+            // free others checkboxes
+            checkboxes.forEach(checkbox => {
+                checkbox.disabled = false;
+            });
+        }
+    }
+
+    document.addEventListener('DOMContentLoaded', function() {
+        // initialize Room ID
+        updateRoomId();
+
+        // listen Room Number and Location changes
+        document.getElementById('roomNumber').addEventListener('input', updateRoomId);
+        const locationRadioButtons = document.querySelectorAll('input[name="location"]');
+        locationRadioButtons.forEach(button => {
+            button.addEventListener('change', updateRoomId);
+        });
+    });
+
+    // automatically generate Room ID
+    function updateRoomId() {
+        const location = document.querySelector('input[name="location"]:checked');
+        const roomNumber = document.getElementById('roomNumber').value;
+
+        // if Location and Room Number both have value, update Room ID
+        if (location && roomNumber) {
+            document.getElementById('roomId').value = location.value + roomNumber;
+        } else {
+            document.getElementById('roomId').value = ''; // 清空 Room ID
+        }
+    }
+
+
+</script>
+
+</body>
+</html>

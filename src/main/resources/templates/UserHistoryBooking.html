@@ -1,0 +1,767 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My bookings - Online Booking System</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.8.0/font/bootstrap-icons.css">
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f8f9fa;
+        }
+
+        .header {
+            background: #1e3a8a;
+            padding: 20px 40px;
+            display: table;
+            width: 100%;
+            box-shadow: 0 2px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .logo-container {
+            display: table-cell;
+            vertical-align: middle;
+            width: 50%;
+        }
+
+        .logo {
+            width: 50px;
+            height: 50px;
+            background-color: white;
+            border-radius: 15px;
+            display: table-cell;
+            vertical-align: middle;
+            text-align: center;
+            color: #1e3a8a;
+            font-weight: bold;
+            font-size: 24px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .system-name {
+            font-size: 28px;
+            font-weight: 600;
+            color: white;
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 20px;
+        }
+
+        .right-section {
+            display: table-cell;
+            vertical-align: middle;
+            text-align: right;
+            width: 50%;
+            color: white;
+        }
+
+        .main-container {
+            display: table;
+            width: 100%;
+            min-height: calc(100vh - 75px);
+        }
+
+        .sidebar {
+            width: 250px;
+            background-color: white;
+            padding: 20px 0;
+            display: table-cell;
+            vertical-align: top;
+            box-shadow: 2px 0 10px rgba(0, 0, 0, 0.05);
+        }
+
+        .sidebar-item {
+            padding: 15px 25px;
+            display: table;
+            width: 100%;
+            cursor: pointer;
+            color: #4b5563;
+            transition: all 0.3s ease;
+        }
+
+        .sidebar-item:hover {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+        }
+
+        .sidebar-item.active {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+            border-left: 4px solid #1e3a8a;
+        }
+
+        .sidebar-icon {
+            display: table-cell;
+            vertical-align: middle;
+            width: 24px;
+            text-align: center;
+            font-size: 20px;
+        }
+
+        .sidebar-text {
+            display: table-cell;
+            vertical-align: middle;
+            padding-left: 15px;
+            font-weight: 500;
+        }
+
+        .main-content {
+            display: table-cell;
+            padding: 30px;
+            background-color: #f8f9fa;
+            width: 100%;
+        }
+
+        .booking-table {
+            background: white;
+            border-radius: 20px;
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.05);
+            width: 100%;
+            border-collapse: separate;
+            border-spacing: 0;
+            overflow: hidden;
+        }
+
+        .booking-table th {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 15px;
+            text-align: left;
+        }
+
+        .booking-table td {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+        }
+
+        .booking-table tr:last-child td {
+            border-bottom: none;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+        }
+
+        .btn-cancel, .btn-update, .btn-view {
+            padding: 8px 16px;
+            border: none;
+            border-radius: 8px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            font-weight: 500;
+        }
+
+        .btn-cancel {
+            background-color: #fee2e2;
+            color: #dc2626;
+        }
+
+        .btn-update {
+            background-color: #e6f0ff;
+            color: #1e3a8a;
+        }
+
+        .btn-view {
+            background-color: #1e3a8a;
+            color: white;
+        }
+
+        .btn-cancel:hover, .btn-update:hover, .btn-view:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+        }
+
+        .overlay {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.5);
+            align-items: center;
+            justify-content: center;
+        }
+
+        .scale-container {
+            transform: scale(0.7);
+            transform-origin: top left;
+            width: 142.857%;
+            height: 142.857%;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            margin-top: -350px;
+            margin-left: -300px;
+        }
+
+        .booking-modal {
+            width: 600px;
+            height: 700px;
+            background: white;
+            border-radius: 15px;
+            box-shadow: 0 0 20px rgba(0,0,0,0.2);
+            border: 2px solid #4267B2;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .modal-header {
+            background: #4267B2;
+            height: 100px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            position: relative;
+            border-bottom: 2px solid #365899;
+        }
+
+        .modal-title {
+            color: white;
+            font-size: 32px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+
+        .close-btn {
+            position: absolute;
+            right: 25px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: white;
+            font-size: 40px;
+            cursor: pointer;
+            background: none;
+            border: none;
+        }
+
+        .modal-body {
+            background: white;
+            padding: 30px 50px;
+            height: calc(100% - 180px);
+            overflow-y: auto;
+        }
+
+        .detail-item {
+            margin-bottom: 20px;
+        }
+
+        .detail-label {
+            color: #555;
+            font-size: 16px;
+            margin-bottom: 8px;
+            font-weight: 500;
+        }
+
+        .detail-value {
+            width: 100%;
+            padding: 12px;
+            border: 2px solid #ddd;
+            border-radius: 8px;
+            background: #f8f9fa;
+            font-size: 16px;
+            color: #333;
+        }
+
+        .confirm-btn {
+            background: #4267B2;
+            color: white;
+            padding: 12px 40px;
+            border-radius: 25px;
+            font-size: 18px;
+            position: absolute;
+            bottom: 30px;
+            left: 50%;
+            transform: translateX(-50%);
+            border: none;
+            cursor: pointer;
+            transition: all 0.3s;
+            box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+        }
+
+        .confirm-btn:hover {
+            background: #365899;
+            transform: translateX(-50%) scale(1.05);
+        }
+
+        .success-modal {
+            max-width: 600px;
+            width: 90%;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+        }
+
+        .success-header {
+            background-color: #c5f7c5;
+            color: #000;
+            padding: 15px 20px;
+            font-weight: bold;
+            position: relative;
+            text-align: center;
+        }
+
+        .success-close-btn {
+            color: #777;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .success-body {
+            background: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .success-message {
+            color: #000;
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        .info-message {
+            color: #555;
+            font-size: 16px;
+        }
+
+        .highlight-text {
+            font-weight: bold;
+        }
+
+        .failed-modal {
+            max-width: 600px;
+            width: 90%;
+            background: white;
+            border-radius: 5px;
+            overflow: hidden;
+            box-shadow: 0 0 10px rgba(0,0,0,0.1);
+            display: none;
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            z-index: 2000;
+        }
+
+        .failed-header {
+            background-color: #f8b4b4;
+            color: #000;
+            padding: 15px 20px;
+            font-weight: bold;
+            position: relative;
+            text-align: center;
+        }
+
+        .failed-close-btn {
+            color: #777;
+            font-size: 24px;
+            cursor: pointer;
+            background: none;
+            border: none;
+            position: absolute;
+            right: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+        }
+
+        .failed-body {
+            background: white;
+            padding: 60px 20px;
+            text-align: center;
+        }
+
+        .error-message {
+            color: #e53935;
+            font-size: 24px;
+            margin-bottom: 40px;
+            font-weight: bold;
+        }
+
+        .rebook-btn {
+            background-color: #f8b4b4;
+            color: #000;
+            border: none;
+            padding: 8px 20px;
+            border-radius: 50px;
+            cursor: pointer;
+            font-weight: 500;
+        }
+
+        .rebook-btn i {
+            margin-left: 5px;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="logo-container">
+        <div class="logo">XJTLU</div>
+        <div class="system-name">Online Booking System</div>
+    </div>
+</div>
+
+<div class="main-container">
+    <div class="sidebar">
+        <div class="sidebar-item" onclick="window.location.href='/welcome'">
+            <div class="sidebar-icon">🏠</div>
+            <div class="sidebar-text">Home</div>
+        </div>
+        <div class="sidebar-item active">
+            <div class="sidebar-icon">📅</div>
+            <div class="sidebar-text">My Bookings</div>
+        </div>
+    </div>
+
+    <div class="main-content">
+        <table class="booking-table">
+            <thead>
+            <tr>
+                <th>BookingID</th>
+                <th>RoomID</th>
+                <th>Start time</th>
+                <th>End time</th>
+                <th>Date</th>
+                <th>Action</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="booking : ${allBookings}" th:data-booking="${#strings.escapeXml(booking.toString())}">
+                <td th:text="${booking.id}"></td>
+                <td th:text="${booking.roomId}"></td>
+                <td th:text="${booking.startTime}"></td>
+                <td th:text="${booking.endTime}"></td>
+                <td th:text="${booking.date}"></td>
+                <td>
+                    <div class="action-buttons">
+                        <form th:action="@{/User/AllBookings/{id}(id=${booking.id})}" method="post">
+                            <input type="hidden" name="_method" value="DELETE">
+                            <button type="submit" class="btn-cancel">Cancel</button>
+                        </form>
+                        <button class="btn-view" onclick="showViewModal(this.closest('tr'))">View</button>
+                        <button class="btn-update" onclick="showUpdateModal(this.closest('tr'))">Update</button>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+</div>
+
+<!-- Booking Detail pop-up window -->
+<div class="overlay" id="detailOverlay">
+    <div class="scale-container">
+        <div class="booking-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">BOOKING DETAILS</h2>
+                <button class="close-btn" onclick="closeModal('detailOverlay')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-item">
+                    <div class="detail-label">ID</div>
+                    <input type="text" class="detail-value" id="bookingId" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Room ID</div>
+                    <input type="text" class="detail-value" id="roomId" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">User ID</div>
+                    <input type="text" class="detail-value" id="userId" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Start Time</div>
+                    <input type="text" class="detail-value" id="startTime" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">End Time</div>
+                    <input type="text" class="detail-value" id="endTime" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <input type="text" class="detail-value" id="date" readonly>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Update Booking pop-up window -->
+<div class="overlay" id="updateOverlay">
+    <div class="scale-container">
+        <div class="booking-modal">
+            <div class="modal-header">
+                <h2 class="modal-title">UPDATE BOOKING</h2>
+                <button class="close-btn" onclick="closeModal('updateOverlay')">×</button>
+            </div>
+            <div class="modal-body">
+                <div class="detail-item">
+                    <div class="detail-label">ID</div>
+                    <input type="text" class="detail-value" id="updateBookingId" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Room ID</div>
+                    <input type="text" class="detail-value" id="updateRoomId" readonly>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Start Time</div>
+                    <select class="detail-value" id="updateStartTime"></select>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">End Time</div>
+                    <select class="detail-value" id="updateEndTime"></select>
+                </div>
+                <div class="detail-item">
+                    <div class="detail-label">Date</div>
+                    <input type="text" class="detail-value" id="updateDate">
+                </div>
+            </div>
+            <button class="confirm-btn" onclick="confirmUpdate()">CONFIRM</button>
+        </div>
+    </div>
+</div>
+
+<!-- Booking Success pop-up window -->
+<div class="success-modal" id="successModal">
+    <div class="success-header">
+        <div>BOOKING SUCCESS!</div>
+        <button class="success-close-btn" onclick="closeModal('successModal')">×</button>
+    </div>
+    <div class="success-body">
+        <div class="success-message">Congratulations on your successful booking!</div>
+        <div class="info-message">
+            For detailed information, please check in the <span class="highlight-text">"History Booking"</span> Section
+        </div>
+    </div>
+</div>
+
+<!-- Booking Failed pop-up window -->
+<div class="failed-modal" id="failedModal">
+    <div class="failed-header">
+        <div>BOOKING FAILED!</div>
+        <button class="failed-close-btn" onclick="closeModal('failedModal')">×</button>
+    </div>
+    <div class="failed-body">
+        <div class="error-message" id="errorMessage">Sorry, your booking failed!!!</div>
+    </div>
+</div>
+
+<script>
+    function showViewModal(row) {
+        const bookingId = row.querySelector('td:first-child').textContent;
+        fetch(`/User/AllBookings/${bookingId}`)
+            .then(response => response.json())
+            .then(booking => {
+                document.getElementById('bookingId').value = booking.id;
+                document.getElementById('roomId').value = booking.roomId;
+                document.getElementById('userId').value = booking.userId;
+                document.getElementById('startTime').value = booking.startTime;
+                document.getElementById('endTime').value = booking.endTime;
+                document.getElementById('date').value = booking.date;
+                document.getElementById('detailOverlay').style.display = 'flex';
+            })
+            .catch(error => {
+                console.error('Error fetching booking details:', error);
+                alert('Failed to load booking details');
+            });
+    }
+
+    function showUpdateModal(row) {
+        const bookingId = row.querySelector('td:first-child').textContent;
+
+        fetch(`/User/AllBookings/${bookingId}`)
+            .then(res => res.json())
+            .then(booking => {
+                const roomId = booking.roomId;
+                const dateStr = booking.date;
+
+                document.getElementById('updateBookingId').value = booking.id;
+                document.getElementById('updateRoomId').value = booking.roomId;
+
+                const dateInput = document.getElementById('updateDate');
+                dateInput.type = 'date';
+
+                const today = new Date();
+                const maxDate = new Date();
+                maxDate.setDate(today.getDate() + 6);
+
+                dateInput.min = today.toISOString().split('T')[0];
+                dateInput.max = maxDate.toISOString().split('T')[0];
+                dateInput.value = booking.date;
+
+                dateInput.onchange = function() {
+                    loadAvailableStartTimes(this.value);
+                };
+
+                function loadAvailableStartTimes(dateStr) {
+                    const bookingId = document.getElementById('updateBookingId').value;
+                    fetch(`/User/AllBookings/AvailableStartTimes?roomId=${roomId}&dateStr=${dateStr}&currentBookingId=${bookingId}`)
+                        .then(res => res.json())
+                        .then(availableStartTimes => {
+                            const startSelect = document.getElementById('updateStartTime');
+                            startSelect.innerHTML = '';
+                            availableStartTimes.forEach(time => {
+                                const option = document.createElement('option');
+                                option.value = time;
+                                option.textContent = time;
+                                if (time === booking.startTime) option.selected = true;
+                                startSelect.appendChild(option);
+                            });
+
+                            if (startSelect.value) {
+                                startSelect.onchange();
+                            }
+                        });
+                }
+                loadAvailableStartTimes(booking.date);
+                // Address the changes of options
+                document.getElementById('updateStartTime').onchange = function() {
+                    const selectedStart = this.value;
+                    const bookingId = document.getElementById('updateBookingId').value;
+                    if (selectedStart) {
+                        fetch(`/User/AllBookings/AvailableEndTimes?roomId=${roomId}&dateStr=${dateInput.value}&startTimeStr=${selectedStart}&currentBookingId=${bookingId}`)
+                            .then(res => res.json())
+                            .then(availableEndTimes => {
+                                const endSelect = document.getElementById('updateEndTime');
+                                endSelect.innerHTML = '';
+                                availableEndTimes.forEach(time => {
+                                    const option = document.createElement('option');
+                                    option.value = time;
+                                    option.textContent = time;
+                                    endSelect.appendChild(option);
+                                });
+                            });
+                    }
+                };
+                document.getElementById('updateOverlay').style.display = 'flex';
+            });
+    }
+
+    function closeModal(modalId) {
+        document.getElementById(modalId).style.display = 'none';
+    }
+
+    function confirmUpdate() {
+        const selectedDate = new Date(document.getElementById('updateDate').value);
+        const today = new Date();
+        today.setHours(0, 0, 0, 0);
+        const maxDate = new Date();
+        maxDate.setDate(today.getDate() + 6);
+        maxDate.setHours(23, 59, 59, 999);
+
+        // Verify date
+        if (selectedDate < today || selectedDate > maxDate) {
+            document.getElementById('errorMessage').textContent =
+                'Please select a date within the next 7 days (including today)';
+            document.getElementById('failedModal').style.display = 'block';
+            return;
+        }
+
+        // If the user has not chosen the start of the end time
+        if (!document.getElementById('updateStartTime').value ||
+            !document.getElementById('updateEndTime').value) {
+            document.getElementById('errorMessage').textContent =
+                'Please select valid start and end times';
+            document.getElementById('failedModal').style.display = 'block';
+            return;
+        }
+
+        const updatedBooking = {
+            id: document.getElementById('updateBookingId').value,
+            roomId: document.getElementById('updateRoomId').value,
+            startTime: document.getElementById('updateStartTime').value,
+            endTime: document.getElementById('updateEndTime').value,
+            date: document.getElementById('updateDate').value
+        };
+
+        fetch(`/User/AllBookings/${updatedBooking.id}`, {
+            method: 'PUT',
+            headers: {
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify(updatedBooking)
+        })
+            .then(response => {
+                if (response.ok) {
+                    document.getElementById('successModal').style.display = 'block';
+                    closeModal('updateOverlay');
+                    setTimeout(() => window.location.reload(), 2000);
+                } else {
+                    return response.text().then(text => {
+                        document.getElementById('errorMessage').textContent = text;
+                        document.getElementById('failedModal').style.display = 'block';
+                        closeModal('updateOverlay');
+                    });
+                }
+            })
+            .catch(error => {
+                console.error('Error:', error);
+                document.getElementById('errorMessage').textContent = 'An error occurred while updating the booking';
+                document.getElementById('failedModal').style.display = 'block';
+                closeModal('updateOverlay');
+            });
+    }
+
+    function rebook() {
+        closeModal('failedModal');
+        document.getElementById('detailOverlay').style.display = 'flex';
+    }
+
+    // Update the table's button click event
+    document.querySelectorAll('.btn-update').forEach(button => {
+        button.onclick = function() {
+            showUpdateModal(this.closest('tr'));
+        };
+    });
+
+    // Update the click event handler for the Cancel button in the table
+    document.querySelectorAll('.btn-cancel').forEach(button => {
+        button.onclick = function(e) {
+            e.preventDefault();
+            if (confirm('Are you sure you want to cancel this booking?')) {
+                const form = this.closest('form');
+                fetch(form.action, {
+                    method: 'DELETE',
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                })
+                    .then(response => {
+                        if (response.ok) {
+                            document.getElementById('successModal').style.display = 'block';
+                            setTimeout(() => window.location.reload(), 2000);
+                        } else {
+                            return response.text().then(text => {
+                                document.getElementById('errorMessage').textContent = text;
+                                document.getElementById('failedModal').style.display = 'block';
+                            });
+                        }
+                    })
+                    .catch(error => {
+                        console.error('Error:', error);
+                        document.getElementById('errorMessage').textContent = 'An error occurred while canceling the booking';
+                        document.getElementById('failedModal').style.display = 'block';
+                    });
+            }
+        };
+    });
+</script>
+</body>
+</html> 
